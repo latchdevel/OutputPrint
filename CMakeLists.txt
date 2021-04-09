@@ -7,8 +7,7 @@ cmake_minimum_required(VERSION 3.1)
 
 project(outputprint)
 
-# Set C/C++ Standard
-set(CMAKE_C_STANDARD 11)
+# Set C++ Standard
 set(CMAKE_CXX_STANDARD 11)
 
 if(NOT BUILD_COMPILER)
@@ -17,33 +16,45 @@ if(NOT BUILD_COMPILER)
   MESSAGE( STATUS "Compiler: " ${BUILD_COMPILER} )
 endif()
 
+# Check if has parent directory
+get_directory_property(hasParent PARENT_DIRECTORY)
+
+# Check if set CMAKE_BUILD_TYPE var
 if(NOT CMAKE_BUILD_TYPE)
   # Set default build type to "release" set -O3 -DNDEBUG
   set(DEFAULT_BUILD_TYPE "release")
-
+  SET(CMAKE_BUILD_TYPE ${DEFAULT_BUILD_TYPE})
+  MESSAGE( STATUS "Build type set to default: " ${CMAKE_BUILD_TYPE} )
+else()
   # Check if set and valid CMAKE_BUILD_TYPE var
-  if(NOT CMAKE_BUILD_TYPE)
-    SET(CMAKE_BUILD_TYPE ${DEFAULT_BUILD_TYPE})
-    MESSAGE( STATUS "Build type set to default: " ${CMAKE_BUILD_TYPE} )
-  else()
-    STRING( TOLOWER "${CMAKE_BUILD_TYPE}" CMAKE_BUILD_TYPE )
-    if((CMAKE_BUILD_TYPE STREQUAL "debug") OR (CMAKE_BUILD_TYPE STREQUAL "release"))
+  STRING( TOLOWER "${CMAKE_BUILD_TYPE}" CMAKE_BUILD_TYPE )
+  if((CMAKE_BUILD_TYPE STREQUAL "debug") OR (CMAKE_BUILD_TYPE STREQUAL "release"))
+    # If no has parent directory show message
+    if(NOT hasParent)
       MESSAGE( STATUS "Build type set to: " ${CMAKE_BUILD_TYPE} )
-    else()
-    MESSAGE( FATAL_ERROR "If set CMAKE_BUILD_TYPE it must be Release or Debug")
     endif()
+  else()
+    MESSAGE( FATAL_ERROR "If set CMAKE_BUILD_TYPE it must be 'release' or 'debug'")
   endif()
 endif()
 
 # Setting build type to "debug" add only -g 
 if(CMAKE_BUILD_TYPE STREQUAL "debug")
-  set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS}   -DDEBUG")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DDEBUG")
 endif()
 
-# Set C/C++ flags
-set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS}   -Wall -Wextra -Wno-unused-parameter")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wno-unused-parameter -Wconversion -Woverloaded-virtual")
+# Set C++ flags
+if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wno-unused-parameter -Wconversion -Woverloaded-virtual -Wsign-conversion")
+elseif(MSVC)
+  set(MSVC_DISABLED_WARNINGS_LIST
+    "C4996" # warning C4996: 'may be unsafe/disable deprecation'
+            # To disable deprecation, use _CRT_SECURE_NO_WARNINGS.
+  )
+  string(REPLACE "C" " -wd" MSVC_DISABLED_WARNINGS_STR ${MSVC_DISABLED_WARNINGS_LIST})
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -WX -W4 ${MSVC_DISABLED_WARNINGS_STR}")
+endif()
+
 
 # Add source directory for sources
 AUX_SOURCE_DIRECTORY( src/ ${PROJECT_NAME}_SRC ) 
@@ -70,7 +81,6 @@ install(TARGETS ${PROJECT_NAME} DESTINATION lib)
 install(TARGETS ${PROJECT_NAME}-dynamic DESTINATION lib)
 
 # If no has parent directory, add uninstall targets
-get_directory_property(hasParent PARENT_DIRECTORY)
 if(NOT hasParent)
   MESSAGE(STATUS "Install prefix: ${CMAKE_INSTALL_PREFIX}")
   add_custom_target( uninstall
