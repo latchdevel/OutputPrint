@@ -631,11 +631,6 @@ void String::replace(char find, char _replace)
 	}
 }
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wsign-conversion"
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wsign-conversion"
-
 void String::replace(const String& find, const String& _replace)
 {
 	if (len == 0 || find.len == 0) return;
@@ -678,9 +673,6 @@ void String::replace(const String& find, const String& _replace)
 		}
 	}
 }
-
-#pragma GCC diagnostic pop
-#pragma clang diagnostic pop
 
 void String::toLowerCase(void)
 {
