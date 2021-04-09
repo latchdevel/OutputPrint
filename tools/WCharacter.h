@@ -15,31 +15,15 @@
  You should have received a copy of the GNU Lesser General Public
  License along with this library; if not, write to the Free Software
  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+
+ Modified by Jorge Rivera Apr 2021: 
+  - Remove WCharacter.h prototypes __attribute__((always_inline))
  */
 
 #ifndef Character_h
 #define Character_h
 
 #include <ctype.h>
-
-// WCharacter.h prototypes
-inline boolean isAlphaNumeric(int c) __attribute__((always_inline));
-inline boolean isAlpha(int c) __attribute__((always_inline));
-inline boolean isAscii(int c) __attribute__((always_inline));
-inline boolean isWhitespace(int c) __attribute__((always_inline));
-inline boolean isControl(int c) __attribute__((always_inline));
-inline boolean isDigit(int c) __attribute__((always_inline));
-inline boolean isGraph(int c) __attribute__((always_inline));
-inline boolean isLowerCase(int c) __attribute__((always_inline));
-inline boolean isPrintable(int c) __attribute__((always_inline));
-inline boolean isPunct(int c) __attribute__((always_inline));
-inline boolean isSpace(int c) __attribute__((always_inline));
-inline boolean isUpperCase(int c) __attribute__((always_inline));
-inline boolean isHexadecimalDigit(int c) __attribute__((always_inline));
-inline int toAscii(int c) __attribute__((always_inline));
-inline int toLowerCase(int c) __attribute__((always_inline));
-inline int toUpperCase(int c)__attribute__((always_inline));
-
 
 // Checks for an alphanumeric character. 
 // It is equivalent to (isalpha(c) || isdigit(c)).
