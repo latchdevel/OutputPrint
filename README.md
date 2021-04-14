@@ -3,6 +3,7 @@
 OutputPrint class provides **print()** and **println()** methods and **String** class from Wiring / Arduino library.
 
 [![License: LGPL v3](https://img.shields.io/badge/License-LGPL%20v3-blue.svg)](https://www.gnu.org/licenses/lgpl-3.0)
+[![Build tests](https://github.com/latchdevel/OutputPrint/actions/workflows/BuildTest.yml/badge.svg)](https://github.com/latchdevel/OutputPrint/actions/workflows/BuildTest.yml)
 
 OutputPrint class can use any file descriptor as output, by default "stdout" if defined, and add a dummy "Serial" instance to emulate Arduino **Serial.print()** function.
 Can run on any libc/libc++ compatible system, like MacOS, FreeBSD, Linux, even Windows.
