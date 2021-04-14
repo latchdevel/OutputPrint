@@ -11,12 +11,15 @@ env:
 on:
   push:
     paths:
+      - '*.cpp'
       - 'src/**'
       - 'tools/**'
       - '.github/workflows/*.yml'
+      - 'CMakeList.txt'
 
   pull_request:
     paths:
+      - '*.cpp' 
       - 'src/**'
       - 'tools/**'
 
